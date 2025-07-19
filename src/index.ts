@@ -45,7 +45,7 @@ app.post('/api/easy_query', async (req, res) => {
 
   try {
 
-    const result = runComputeFlow(text);
+    const result = await runComputeFlow(text);
     res.json({ success: true, answer: result });
   } catch (err: any) {
     console.error('OpenAI error:', err);

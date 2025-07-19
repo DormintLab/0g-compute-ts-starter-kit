@@ -220,7 +220,7 @@ async function runComputeFlow(query: string) {
     console.log(`   • Payment: Automatic micropayment`);
     
     console.log("\n🎉 Demo completed successfully!");
-    return aiResponse
+    return `${aiResponse}`
 
   } catch (error: any) {
     console.error("\n❌ Demo failed with error:");
@@ -234,7 +234,7 @@ async function runComputeFlow(query: string) {
     console.log("3. Check network connectivity");
     console.log("4. Verify 0G testnet is accessible");
     
-    process.exit(1);
+    return ``
   }
 }
 
