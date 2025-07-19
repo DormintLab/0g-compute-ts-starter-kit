@@ -14,6 +14,7 @@ dotenv.config();
 
 // Create Express app
 const app = express();
+const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 4000;
 
 // Apply basic middleware
@@ -63,11 +64,11 @@ const startServer = async () => {
     await initializeApplication();
     
     // Start the server
-    app.listen(PORT, () => {
-      console.log(`
-  🚀 0G Compute Network API Server running on http://localhost:${PORT}
-  📚 API Documentation: http://localhost:${PORT}/docs
-      `);
+    app.listen(PORT, HOST, () => {
+    console.log(`
+🚀 0G Compute Network API Server running on http://${HOST}:${PORT}
+📚 API Documentation: http://${HOST}:${PORT}/docs
+    `);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
