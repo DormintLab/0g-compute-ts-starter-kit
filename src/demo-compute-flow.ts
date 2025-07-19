@@ -1,5 +1,3 @@
-#!/usr/bin/env ts-node
-
 import { ethers } from "ethers";
 import { createZGComputeNetworkBroker } from "@0glabs/0g-serving-broker";
 import OpenAI from "openai";
@@ -15,11 +13,11 @@ const OFFICIAL_PROVIDERS = {
 };
 
 // Test configuration
-const TEST_QUERY = "What is the capital of France? Please answer in one sentence.";
 const FALLBACK_FEE = 0.01;
 const INITIAL_FUND_AMOUNT = 0.1; // 0.1 OG tokens
 
-async function testComputeFlow() {
+
+async function runComputeFlow(query: string) {
   console.log("🚀 Starting 0G Compute Network Flow Demo");
   console.log("=" .repeat(50));
 
@@ -125,7 +123,7 @@ async function testComputeFlow() {
     console.log("-".repeat(30));
     
     console.log("⏳ Generating authentication headers...");
-    const headers = await broker.inference.getRequestHeaders(selectedProvider, TEST_QUERY);
+    const headers = await broker.inference.getRequestHeaders(selectedProvider, query);
     console.log("✅ Authentication headers generated (single-use)");
     console.log(`📝 Headers keys: ${Object.keys(headers).join(', ')}`);
 
@@ -133,7 +131,7 @@ async function testComputeFlow() {
     console.log("\n📋 Step 8: Send Query to AI Service");
     console.log("-".repeat(30));
     
-    console.log(`💬 Query: "${TEST_QUERY}"`);
+    console.log(`💬 Query: "${query}"`);
     console.log("⏳ Creating OpenAI client and sending request...");
     
     // Create OpenAI client with service endpoint
@@ -153,7 +151,7 @@ async function testComputeFlow() {
     // Send the query
     const completion = await openai.chat.completions.create(
       {
-        messages: [{ role: "user", content: TEST_QUERY }],
+        messages: [{ role: "user", content: query }],
         model: model,
       },
       {
@@ -216,12 +214,13 @@ async function testComputeFlow() {
     console.log("✅ 0G Compute Network flow completed successfully!");
     console.log("\n📊 Summary:");
     console.log(`   • Provider: llama-3.3-70b-instruct`);
-    console.log(`   • Query: "${TEST_QUERY}"`);
+    console.log(`   • Query: "${query}"`);
     console.log(`   • Response: "${aiResponse?.substring(0, 100)}..."`);
     console.log(`   • Verification: TEE-based (TeeML)`);
     console.log(`   • Payment: Automatic micropayment`);
     
     console.log("\n🎉 Demo completed successfully!");
+    return aiResponse
 
   } catch (error: any) {
     console.error("\n❌ Demo failed with error:");
@@ -246,17 +245,4 @@ function formatSection(title: string) {
   console.log(`${"=".repeat(50)}`);
 }
 
-// Run the test
-if (require.main === module) {
-  testComputeFlow()
-    .then(() => {
-      console.log("\n✨ Script execution completed");
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error("❌ Script execution failed:", error);
-      process.exit(1);
-    });
-}
-
-export { testComputeFlow };
+export { runComputeFlow };

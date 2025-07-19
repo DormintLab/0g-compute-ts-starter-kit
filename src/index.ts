@@ -8,6 +8,7 @@ import { initializeApplication } from './startup';
 // Import routes
 import accountRoutes from './routes/accountRoutes';
 import serviceRoutes from './routes/serviceRoutes';
+import {runComputeFlow} from "./demo-compute-flow";
 
 // Load environment variables
 dotenv.config();
@@ -33,6 +34,24 @@ const apiPrefix = '/api';
 // Register routes
 app.use(`${apiPrefix}/account`, accountRoutes);
 app.use(`${apiPrefix}/services`, serviceRoutes);
+
+
+app.post('/api/easy_query', async (req, res) => {
+  const { text } = req.body;
+
+  if (typeof text !== 'string' || !text.trim()) {
+    return res.status(400).json({ success: false, error: 'Missing or invalid \"text\"' });
+  }
+
+  try {
+
+    const result = runComputeFlow(text);
+    res.json({ success: true, answer: result });
+  } catch (err: any) {
+    console.error('OpenAI error:', err);
+    res.status(500).json({ success: false, error: err?.message || 'Failed to generate completion' });
+  }
+});
 
 // Root route with basic info
 app.get('/', (req, res) => {
