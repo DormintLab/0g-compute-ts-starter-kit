@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { createZGComputeNetworkBroker } from "@0glabs/0g-serving-broker";
 import OpenAI from "openai";
 import dotenv from "dotenv";
+import {LedgerDetailStructOutput} from "@0glabs/0g-serving-broker/types/ledger/ledger";
 
 // Load environment variables
 dotenv.config();
@@ -53,9 +54,9 @@ async function runComputeFlow(query: string) {
     console.log("\n📋 Step 3: Check/Setup Ledger Account");
     console.log("-".repeat(30));
     
-    let ledgerInfo;
+    let ledgerInfo: LedgerDetailStructOutput;
     try {
-      ledgerInfo = await broker.ledger.getLedger();
+      ledgerInfo = (await broker.ledger.getLedger()) as unknown as LedgerDetailStructOutput;
       console.log("✅ Ledger account exists");
       console.log(ledgerInfo);
     } catch (error) {
@@ -64,7 +65,7 @@ async function runComputeFlow(query: string) {
       console.log(`✅ Ledger created with ${INITIAL_FUND_AMOUNT} OG tokens`);
       
       // Get updated balance
-      ledgerInfo = await broker.ledger.getLedger();
+      ledgerInfo = (await broker.ledger.getLedger()) as unknown as LedgerDetailStructOutput;
       console.log(ledgerInfo);
     }
 
@@ -194,7 +195,7 @@ async function runComputeFlow(query: string) {
     console.log("\n📋 Step 10: Check Final Balance");
     console.log("-".repeat(30));
     
-    const finalBalance = await broker.ledger.getLedger();
+    const finalBalance: LedgerDetailStructOutput = (await broker.ledger.getLedger()) as unknown as LedgerDetailStructOutput;
     console.log(finalBalance);
     
     // Calculate approximate cost
